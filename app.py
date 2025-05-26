@@ -148,7 +148,6 @@ def index():
     return render_template('form.html')
 
 @app.route('/cotizar', methods=['POST'])
-@app.route('/cotizar', methods=['POST'])
 def cotizar():
     nombre = request.form['nombre']
     email = request.form['email']

@@ -7,42 +7,48 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-2xl w-full bg-white rounded-lg shadow-lg p-6">
+    <div class="max-w-7xl w-full bg-white rounded-lg shadow-lg p-6">
         <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Formulario de Cotización</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Formulario -->
+            <div class="space-y-4">
+                <form id="cotizacionForm" class="space-y-4">
+                    <div>
+                        <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    </div>
 
-        <form id="cotizacionForm" class="space-y-4">
-            <div>
-                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+                        <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    </div>
+
+                    <div>
+                        <label for="tipo" class="block text-sm font-medium text-gray-700">Tipo de Servicio:</label>
+                        <select name="tipo" id="tipo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option>Constitución de empresa</option>
+                            <option>Defensa laboral</option>
+                            <option>Consultoría tributaria</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción del caso:</label>
+                        <textarea name="descripcion" id="descripcion" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 h-32"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Generar Cotización</button>
+                </form>
             </div>
 
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
-                <input type="email" name="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+            <!-- Resultado -->
+            <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Resultado de la Cotización</h3>
+                <div id="resultado" class="space-y-4">
+                    <p class="text-gray-500 italic">Complete el formulario para ver los resultados de la cotización.</p>
+                </div>
             </div>
-
-            <div>
-                <label for="tipo" class="block text-sm font-medium text-gray-700">Tipo de Servicio:</label>
-                <select name="tipo" id="tipo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                    <option>Constitución de empresa</option>
-                    <option>Defensa laboral</option>
-                    <option>Consultoría tributaria</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción del caso:</label>
-                <textarea name="descripcion" id="descripcion" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 h-32"></textarea>
-            </div>
-
-            <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Generar Cotización</button>
-        </form>
-
-        <hr class="my-6 border-gray-200">
-
-        <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Resultado de la Cotización</h3>
-        <div id="resultado" class="bg-gray-50 p-4 rounded-md border border-gray-200">
-            <p class="text-gray-500 italic">Complete el formulario para ver los resultados de la cotización.</p>
         </div>
     </div>
 
@@ -64,13 +70,13 @@
                     return;
                 }
 
-                const serviciosAdicionales = data.servicios_adicionales.length > 0 
-                    ? data.servicios_adicionales.join(", ") 
-                    : "Ninguno";
+                const serviciosAdicionales = data.servicios_adicionales && data.servicios_adicionales.length > 0 && data.servicios_adicionales[0] !== 'Ninguno'
+                    ? `<ul class="list-disc pl-5">${data.servicios_adicionales.map(s => `<li>${s}</li>`).join('')}</ul>`
+                    : 'Ninguno';
 
                 resultadoDiv.innerHTML = `
                     <div class="space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-2">
                             <p><strong>Número de Cotización:</strong> ${data.numero}</p>
                             <p><strong>Nombre:</strong> ${data.nombre}</p>
                             <p><strong>Email:</strong> ${data.email}</p>
@@ -80,7 +86,8 @@
                             <p><strong>Precio Final:</strong> S/ ${data.precio_final}</p>
                             <p><strong>Fecha:</strong> ${data.fecha}</p>
                             <p><strong>Nivel de Complejidad:</strong> ${data.complejidad}</p>
-                            <p><strong>Servicios Adicionales:</strong> ${serviciosAdicionales}</p>
+                            <p><strong>Servicios Adicionales:</strong></p>
+                            ${serviciosAdicionales}
                         </div>
                         <div>
                             <h4 class="text-lg font-semibold text-gray-700">Propuesta Profesional:</h4>
