@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generar Cotización Legal</title>
+</head>
+<body>
+    <h2>Formulario de Cotización</h2>
+    <form id="cotizacionForm">
+        <label>Nombre:</label><br>
+        <input type="text" name="nombre" required><br>
+
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br>
+
+        <label>Tipo de Servicio:</label><br>
+        <select name="tipo">
+            <option>Constitución de empresa</option>
+            <option>Defensa laboral</option>
+            <option>Consultoría tributaria</option>
+        </select><br>
+
+        <label>Descripción del caso:</label><br>
+        <textarea name="descripcion" required></textarea><br><br>
+
+        <button type="submit">Generar Cotización</button>
+    </form>
+
+    <pre id="resultado"></pre>
+
+    <script>
+        document.getElementById('cotizacionForm').onsubmit = async function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const res = await fetch('/cotizar', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            document.getElementById('resultado').textContent = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>
